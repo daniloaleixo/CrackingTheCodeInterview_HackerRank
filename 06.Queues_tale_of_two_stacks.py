@@ -44,61 +44,45 @@
 
 
 class MyQueue(object):
-	stack = []
-	stack_pointer = -1	
-	stack_aux = []
-	stack_aux_pointer = -1	
+	push_stack = []
+	pop_stack = []
 
 	def __init__(self):
-		self.stack = []	
-		self.stack_pointer = -1	
-		self.stack_aux = []
-		self.stack_aux_pointer = -1	
+		self.push_stack = []	
+		self.pop_stack = []
+
+	def __switch(self, stack1, stack2):
+		stack2 = list(reversed(stack1))
+		stack1 = []
+		return stack1, stack2
+		# while len(stack1) > 0:
+		# 	elem = stack1.pop()
+		# 	stack2.append(elem)
 
 	def peek(self):
-		return self.stack[0]
+		if len(self.push_stack) > 0:
+			return self.push_stack[0]
+		return self.pop_stack[len(self.pop_stack) - 1]
 
 	def pop(self):
-		# print(self.stack, self.stack_pointer, self.stack_aux, self.stack_aux_pointer)
+		# print(self.push_stack, self.pop_stack)
+
+		# If our numbers is in the push stack we have to switch to pop
+		if len(self.push_stack) > 0:
+			self.push_stack, self.pop_stack = self.__switch(self.push_stack, self.pop_stack)
 		
-		# Empty stack leaving the past element there
-		while self.stack_pointer > 0:
-			# print('antes', self.stack, self.stack_pointer, self.stack_aux, self.stack_aux_pointer)
-			elem = self.stack.pop()
-			self.stack_pointer = self.__decrement_pointer(self.stack_pointer)
-			self.stack_aux.append(elem)
-			self.stack_aux_pointer = self.__increment_pointer(self.stack_aux_pointer)
-			# print('depois', self.stack, self.stack_pointer, self.stack_aux, self.stack_aux_pointer)
-
-		last_element = self.stack[0]
+		# print('vefore pop', self.push_stack, self.pop_stack)
+		last_element = self.pop_stack.pop()
+		# print('after pop', self.push_stack, self.pop_stack)
 		# print('last', last_element)
-
-		self.stack = []
-		self.stack_pointer = -1
-
-		while self.stack_aux_pointer >= 0:
-			# print('antes', self.stack, self.stack_pointer, self.stack_aux, self.stack_aux_pointer)
-			elem = self.stack_aux.pop()
-			self.stack_aux_pointer = self.__decrement_pointer(self.stack_aux_pointer)
-			self.stack.append(elem)
-			self.stack_pointer = self.__increment_pointer(self.stack_pointer)
-			# print('depois', self.stack, self.stack_pointer, self.stack_aux, self.stack_aux_pointer)
-
-		# print('acabou', self.stack, self.stack_aux)
 		return last_element
 
 	def put(self, value):
-		self.stack.append(value)
-		self.stack_pointer = self.stack_pointer + 1
-		# print(self.stack, self.stack_pointer, self.stack_aux, self.stack_aux_pointer)
+		if len(self.pop_stack) > 0:
+			self.pop_stack, self.push_stack = self.__switch(self.pop_stack, self.push_stack)
 
-	def __decrement_pointer(self, pointer):
-		pointer = pointer - 1
-		return pointer
-
-	def __increment_pointer(self, pointer):
-		pointer = pointer + 1
-		return pointer
+		self.push_stack.append(value)
+		# print(self.push_stack, self.pop_stack)
 
 
 queue = MyQueue()
