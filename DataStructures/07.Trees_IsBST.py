@@ -30,42 +30,69 @@ class Tree:
         self.right = None
 # """
 
+# def checkBST(root):
+# 	stack = [root]
+# 	all_data = []
+
+# 	while len(stack) > 0:
+# 		# print('stack comeco', [elem.data for elem in stack])
+# 		node = stack.pop()
+# 		all_data.append(node.data)
+
+# 		if node.left:
+# 			# print('left', node.left.data, '<', node.data)
+# 			if node.left.data < node.data:
+# 				stack.append(node.left)
+# 			else:
+# 				return False
+
+# 		if node.right: 
+# 			# print('right', node.data, '<', node.right.data)
+# 			if node.data < node.right.data:
+# 				stack.append(node.right)
+# 			else:
+# 				return False
+
+# 	# print('all_data', all_data)
+# 	# print('check', checkDuplicates(all_data))
+# 	return True and checkDuplicates(all_data)
+
+# def checkDuplicates(array):
+# 	my_dict = dict()
+# 	for elem in array:
+# 		if elem in my_dict:
+# 			return False
+# 		else:
+# 			my_dict[elem] = True
+# 	return True
+
+# For Some reason this works
+def inOrderTraversalCheck(node, inValue=None):
+	result = True
+	if node.left is not None:
+		(result, value) = inOrderTraversalCheck(node.left,min(node.data,inValue))
+		if result is False:
+			return (False, value)
+		if value >= node.data:
+			return (False, value)
+	if node.right is not None:
+		(result, value) = inOrderTraversalCheck(node.right, max(node.data,inValue))
+		if result is False:
+			return (False, value)
+		if value <= node.data:
+			return (False, value)
+	if inValue is not None:
+		if inValue >= node.data:
+			return (False, node.data)
+	if node.right or node.left is not None:
+		return (True, max(node.data,value))
+	else:
+		return (True,node.data)
+
+
 def checkBST(root):
-	stack = [root]
-	all_data = []
-
-	while len(stack) > 0:
-		# print('stack comeco', [elem.data for elem in stack])
-		node = stack.pop()
-		all_data.append(node.data)
-
-		if node.left:
-			# print('left', node.left.data, '<', node.data)
-			if node.left.data < node.data:
-				stack.append(node.left)
-			else:
-				return False
-
-		if node.right: 
-			# print('right', node.data, '<', node.right.data)
-			if node.data < node.right.data:
-				stack.append(node.right)
-			else:
-				return False
-
-	# print('all_data', all_data)
-	# print('check', checkDuplicates(all_data))
-	return True and checkDuplicates(all_data)
-
-def checkDuplicates(array):
-	my_dict = dict()
-	for elem in array:
-		if elem in my_dict:
-			return False
-		else:
-			my_dict[elem] = True
-	return True
-
+	(result, value) = inOrderTraversalCheck (root)
+	return (result)
 
 
 elem1 = Tree(1)
