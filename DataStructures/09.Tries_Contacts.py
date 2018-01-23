@@ -50,7 +50,7 @@ def insert(root, string):
 		i = i + 1
 
 	node.value = string
-	node.child_words = 0
+	node.child_words = 1
 	# print(node.value)
 
 
